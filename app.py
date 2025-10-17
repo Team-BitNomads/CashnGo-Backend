@@ -12,7 +12,6 @@ def create_app():
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     app.logger.setLevel(logging.INFO)
-    print("Loaded MONGO_URI:", app.config.get("MONGO_URI"))
 
     init_db(app)
 

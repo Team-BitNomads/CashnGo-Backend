@@ -1,0 +1,94 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+cashEnv/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+cashEnv
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Flask specific
+instance/
+*.sqlite3
+*.db
+
+# Pytest
+.cache/
+
+# Pyre type checker
+.pyre/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs and databases
+*.log
+*.pot
+
+# Local environment variables
+.env
+.env.*
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Test artifacts
+*.pytest_cache/
+.tox/
+.nox/
+.coverage
+*.cover
+*.py,cover
+
+#temp and backup files
+*.tmp
+*.bak
+*.temp
+*.backup

@@ -499,7 +499,7 @@ Content-Type: application/json
 - `401`: Token missing, invalid, or expired
 - `403`: Insufficient role (not Student)
 
-**Example cURL (when AI fails):**
+**Example cURL:**
 ```bash
 curl -X POST -H "Content-Type: application/json" -H "x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." -d '{
     "target_skill_gap": "Advanced Excel Charting"
@@ -522,7 +522,6 @@ Content-Type: application/json
 ```json
 {
   "quiz_id": "string",
-  "skill_name": "string",
   "answers": [0, 1, 2] // Array of 3 indices
 }
 ```
@@ -552,7 +551,6 @@ Content-Type: application/json
 ```bash
 curl -X POST -H "Content-Type: application/json" -H "x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." -d '{
     "quiz_id": "mock_quiz_123",
-    "skill_name": "Advanced Excel Charting",
     "answers": [0, 2, 1]
 }' http://127.0.0.1:5000/api/gigs/skill-synth/submit-quiz
 ```
@@ -582,6 +580,55 @@ x-access-token: jwt_token
 **Error Responses:**
 - `401`: Token missing, invalid, or expired
 - `403`: Insufficient role
+
+### Top-up/Withdraw from Wallet
+
+**Endpoint:** `POST /api/payments/wallet/<action>`
+
+**Description:** Top-up or withdraw from the user's wallet.
+
+**Headers:**
+```
+x-access-token: jwt_token
+Content-Type: application/json
+```
+
+**URL Parameters:**
+- `action`: "topup" or "withdraw"
+
+**Request Body:**
+```json
+{
+  "amount": 0.0
+}
+```
+
+**Success Response (200):**
+```json
+{
+  "message": "Top-up successful!" | "Withdrawal successful!",
+  "new_balance": 0.0
+}
+```
+
+**Error Responses:**
+- `400`: Missing amount, invalid amount, or insufficient balance
+- `401`: Token missing, invalid, or expired
+- `403`: Insufficient role
+
+**Example cURL (Top-up):**
+```bash
+curl -X POST -H "Content-Type: application/json" -H "x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." -d '{
+    "amount": 100.00
+}' http://127.0.0.1:5000/api/payments/wallet/topup
+```
+
+**Example cURL (Withdraw):**
+```bash
+curl -X POST -H "Content-Type: application/json" -H "x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." -d '{
+    "amount": 50.00
+}' http://127.0.0.1:5000/api/payments/wallet/withdraw
+```
 
 ## Error Handling
 

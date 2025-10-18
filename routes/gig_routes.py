@@ -24,11 +24,20 @@ def post_gig(current_user):
 
     if not all([title, description, price, required_skill_tag]):
         return jsonify({'message': 'Missing required fields: title, description, price, required_skill_tag'}), 400
+
+    employer_gigs_price = 0
+    employer_gigs = Gig.find_by_employer(current_user._id)
+    for gig in employer_gigs:
+        if gig.status in ['POSTED', 'ESCROWED']:
+            employer_gigs_price += gig.price
     
     try:
         price = float(price)
         if price <= 0:
             return jsonify({'message': 'Price must be a positive number.'}), 400
+
+        if price + employer_gigs_price > float(current_user.wallet_balance):
+            return jsonify({'message': 'Insufficient wallet balance to post this gig.'}), 400
     except ValueError:
         return jsonify({'message': 'Price must be a valid number.'}), 400
 
@@ -122,7 +131,8 @@ def approve_payment(current_user, gig_id):
     if not student:
         return jsonify({'message': 'Assigned student not found.'}), 404
 
-    student.update_wallet_balance(gig.price)
+    student.update_wallet_balance(gig.price, 'add')
+    current_user.update_wallet_balance(gig.price, 'subtract')
     gig.status = 'PAID'
     gig.save()
 
@@ -184,11 +194,10 @@ def submit_skill_synth_quiz(current_user):
         return jsonify({'message': 'Invalid JSON data.'}), 400
 
     quiz_id = data.get('quiz_id')
-    skill_name = data.get('skill_name')
     answers = data.get('answers')
 
-    if not all([quiz_id, skill_name, answers]):
-        return jsonify({'message': 'Missing required fields: quiz_id, skill_name, answers.'}), 400
+    if not all([quiz_id, answers]):
+        return jsonify({'message': 'Missing required fields: quiz_id, answers.'}), 400
     if not isinstance(answers, list) or len(answers) != 3:
         return jsonify({'message': 'Answers must be a list of 3 indices.'}), 400
 
@@ -199,12 +208,9 @@ def submit_skill_synth_quiz(current_user):
     if quiz.student_id != str(current_user._id):
         return jsonify({'message': 'You are not authorized to submit this quiz.'}), 403
 
-    if quiz.skill_name != skill_name:
-        return jsonify({'message': 'Skill name mismatch.'}), 400
-
     correct_answers = [q['correct_answer_index'] for q in quiz.questions]
     if answers == correct_answers:
-        current_user.add_badge(skill_name)
-        return jsonify({'message': f'Quiz submitted successfully! You have earned the {skill_name} badge.', 'badges': current_user.badges}), 200
+        current_user.add_badge(quiz.skill_name)
+        return jsonify({'message': f'Quiz submitted successfully! You have earned the {quiz.skill_name} badge.', 'badges': current_user.badges}), 200
     else:
         return jsonify({'message': 'Quiz failed. You did not earn the badge. Try again.'}), 200

@@ -10,10 +10,10 @@ class Gig:
         self.description = description
         self.price = float(price)
         self.required_skill_tag = required_skill_tag
-        self.employer_id = str(employer_id) # Store as string for simplicity with ObjectId
-        self.status = status # POSTED, ESCROWED, PAID, COMPLETED (if an additional state is needed)
-        self.applied_students = applied_students if applied_students is not None else [] # List of student_ids
-        self.claimed_by = claimed_by # student_id who claimed the gig
+        self.employer_id = str(employer_id)
+        self.status = status
+        self.applied_students = applied_students if applied_students is not None else [] 
+        self.claimed_by = claimed_by
         self.created_at = datetime.datetime.utcnow()
         self._id = _id if _id else ObjectId()
 

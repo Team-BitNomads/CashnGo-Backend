@@ -82,6 +82,9 @@ class User:
             self.badges.append(badge_id)
             self.save() # Persist the change
 
-    def update_wallet_balance(self, amount):
-        self.wallet_balance += amount
+    def update_wallet_balance(self, amount, action):
+        if action == 'add':
+            self.wallet_balance += amount
+        elif action == 'subtract':
+            self.wallet_balance -= amount
         self.save() # Persist the change
